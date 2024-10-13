@@ -2,7 +2,17 @@ import Github from "@auth/core/providers/github";
 import Google from "@auth/core/providers/google";
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
+import { DataModel } from "./_generated/dataModel";
+
+const CustomPassword = Password<DataModel>({
+  profile(params) {
+    return {
+      email: params.email as string,
+      name: params.name as string,
+    };
+  },
+});
 
 export const { auth, signIn, signOut, store } = convexAuth({
-  providers: [Password, Github, Google], // convex settings에 AUTH_GITHUB_ID, AUTH_GITHUB_SECRET 있으면 안해도 되고 없을 경우 여기에서 세팅 ({clientId, clientSecret})
+  providers: [CustomPassword, Github, Google], // convex settings에 AUTH_GITHUB_ID, AUTH_GITHUB_SECRET 있으면 안해도 되고 없을 경우 여기에서 세팅 ({clientId, clientSecret})
 });
